@@ -1,0 +1,1 @@
+/usr/bin/g++ -g -rdynamic CMakeFiles/sinus_sum.dir/main.cpp.o -o sinus_sum 

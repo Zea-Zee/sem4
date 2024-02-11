@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Linux-g++"
+	BuildStamp="20240208-0835-Experimental"
+	Name="zea"
+	Generator="ctest-3.22.1"
+	CompilerName="/usr/bin/g++"
+	CompilerVersion="11.4.0"
+	OSName="Linux"
+	Hostname="zea"
+	OSRelease="6.5.0-17-generic"
+	OSVersion="#17~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Tue Jan 16 14:32:32 UTC 2"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="AuthenticAMD"
+	VendorID="Advanced Micro Devices"
+	FamilyID="23"
+	ModelID="104"
+	ProcessorCacheSize="512"
+	NumberOfLogicalCPU="12"
+	NumberOfPhysicalCPU="6"
+	TotalVirtualMemory="0"
+	TotalPhysicalMemory="15312"
+	LogicalProcessorsPerPhysical="2"
+	ProcessorClockFrequency="1653.24"
+	>
+	<Testing>
+		<StartDateTime>Feb 08 16:03 +07</StartDateTime>
+		<StartTestTime>1707383015</StartTestTime>
+		<TestList/>
+		<EndDateTime>Feb 08 16:03 +07</EndDateTime>
+		<EndTestTime>1707383015</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>

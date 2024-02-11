@@ -1,0 +1,1 @@
+/usr/bin/g++ -g -rdynamic CMakeFiles/cmakestart.dir/main.cpp.o -o cmakestart 

@@ -1,0 +1,3 @@
+/home/zea/Desktop/Parallelism/tst/build/CMakeFiles/txt.dir
+/home/zea/Desktop/Parallelism/tst/build/CMakeFiles/edit_cache.dir
+/home/zea/Desktop/Parallelism/tst/build/CMakeFiles/rebuild_cache.dir

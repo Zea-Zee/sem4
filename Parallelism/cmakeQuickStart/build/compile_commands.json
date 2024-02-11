@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/zea/Desktop/Parallelism/cmakeQuickStart/build",
+  "command": "/usr/bin/g++   -g -o CMakeFiles/sinus_sum.dir/main.cpp.o -c /home/zea/Desktop/Parallelism/cmakeQuickStart/main.cpp",
+  "file": "/home/zea/Desktop/Parallelism/cmakeQuickStart/main.cpp"
+}
+]

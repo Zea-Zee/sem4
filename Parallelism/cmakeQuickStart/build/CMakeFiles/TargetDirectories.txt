@@ -1,0 +1,5 @@
+/home/zea/Desktop/Parallelism/cmakeQuickStart/build/CMakeFiles/sinus_sum.dir
+/home/zea/Desktop/Parallelism/cmakeQuickStart/build/CMakeFiles/package.dir
+/home/zea/Desktop/Parallelism/cmakeQuickStart/build/CMakeFiles/package_source.dir
+/home/zea/Desktop/Parallelism/cmakeQuickStart/build/CMakeFiles/edit_cache.dir
+/home/zea/Desktop/Parallelism/cmakeQuickStart/build/CMakeFiles/rebuild_cache.dir

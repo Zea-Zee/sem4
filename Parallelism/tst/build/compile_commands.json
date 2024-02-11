@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/zea/Desktop/Parallelism/tst/build",
+  "command": "/usr/bin/g++   -g -std=gnu++11 -o CMakeFiles/txt.dir/hi.cpp.o -c /home/zea/Desktop/Parallelism/tst/hi.cpp",
+  "file": "/home/zea/Desktop/Parallelism/tst/hi.cpp"
+}
+]

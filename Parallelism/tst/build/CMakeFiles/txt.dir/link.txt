@@ -1,0 +1,1 @@
+/usr/bin/g++ -g CMakeFiles/txt.dir/hi.cpp.o -o txt 
