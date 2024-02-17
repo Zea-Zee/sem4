@@ -1,0 +1,13 @@
+train: /home/zea/Desktop/sem4/PHC/cars_dataset/train/images
+
+val: /home/zea/Desktop/sem4/PHC/cars_dataset/val/images
+
+test:  /home/zea/Desktop/sem4/PHC/cars_dataset/test/images
+
+
+
+# Classes
+
+nc: 3
+
+names: [ 'car', 'plate', 'truck']
