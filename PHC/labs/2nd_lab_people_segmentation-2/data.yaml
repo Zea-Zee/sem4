@@ -1,0 +1,12 @@
+names:
+- Human
+nc: 1
+roboflow:
+  license: Public Domain
+  project: 2nd_lab_people_segmentation
+  url: https://universe.roboflow.com/nsu-sxhmy/2nd_lab_people_segmentation/dataset/2
+  version: 2
+  workspace: nsu-sxhmy
+test: C:\Users\kuzga\OneDrive\Рабочий стол\sem4\PHC\2nd_lab\2nd_lab_people_segmentation-2\test
+train: C:\Users\kuzga\OneDrive\Рабочий стол\sem4\PHC\2nd_lab\2nd_lab_people_segmentation-2\train
+val: C:\Users\kuzga\OneDrive\Рабочий стол\sem4\PHC\2nd_lab\2nd_lab_people_segmentation-2\valid
