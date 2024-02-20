@@ -1,24 +1,51 @@
 from requests import Request, Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json
+from colorama import Fore, Back, Style, init
+import sys
+import os
 
-url = 'https://sandbox-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
-parameters = {
-    'start': '1',
-    'limit': '5000',
-    'convert': 'USD'
+
+init()
+
+api_key = ''
+try:
+    api_key_path = str(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) + '/trash.json'
+    file = open(api_key_path, 'r')
+    api_key = json.load(file)['apiKeys']['coinmarketcap.com']
+    file.close()
+except Exception as e:
+    print(Fore.RED + "Can't read api_key: " + str(e), Style.RESET_ALL)
+    sys.exit(1)
+
+
+base_url = 'https://pro-api.coinmarketcap.com/'
+urls_dict = {
+    'categories': base_url + 'v1/cryptocurrency/categories',
+    'exchange': base_url + 'v1/exchange/map',
+    'test': 'https://sandbox-api.coinmarketcap.com/v1/cryptocurrency/listings/latest',
+    'test_BTC': 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=BTC',
+    'info': 'https://pro-api.coinmarketcap.com/v1/key/info'
 }
+
 headers = {
     'Accepts': 'application/json',
-    'X-CMC_PRO_API_KEY': '7cb7dce9-a6ef-4386-897c-f8887d2855a9',
+    'X-CMC_PRO_API_KEY': api_key,
 }
 
 session = Session()
 session.headers.update(headers)
 
 try:
-    response = session.get(url, params=parameters)
-    data = json.loads(response.text)
-    print(data)
+    save_path = str(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) + '/networks/data'
+    for key, value in urls_dict.items():
+        print(Back.YELLOW, f'Requesting {value}', Style.RESET_ALL)
+        response = session.get(value)
+        response.raise_for_status()
+        data = response.json()
+        output = open(f"{save_path}//{key}.json", 'w')
+        output.write(json.dumps(data))
+        output.close()
+        print(Back.GREEN, f'{value} has sucessfully loaded and written', Style.RESET_ALL)
 except (ConnectionError, Timeout, TooManyRedirects) as e:
     print(e)
