@@ -126,11 +126,12 @@ void run_parallel(size_t n, size_t m)
 
     for (size_t j = 0; j < n; j++)
         b[j] = j;
-    
+
 
     double t = cpuSecond();
-    matrix_vector_product_omp(a, b, c, m, n);
-    t = cpuSecond() - t;
+    for(int i = 0; i < 10; i++)
+        matrix_vector_product_omp(a, b, c, m, n);
+    t = (cpuSecond() - t) / 10;
 
     printf("Elapsed time (parallel): %.6f sec.\n", t);
     free(a);
@@ -146,7 +147,7 @@ int main(int argc, char *argv[])
         M = atoi(argv[1]);
     if (argc > 2)
         N = atoi(argv[2]);
-    run_serial(M, N);
+    // run_serial(M, N);
     run_parallel(M, N);
     return 0;
 }
