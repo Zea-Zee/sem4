@@ -8,7 +8,7 @@ all: $(EXEC)
 $(EXEC): integral.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-integrate.o: integral.c
+integral.o: integral.c
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 clean:
