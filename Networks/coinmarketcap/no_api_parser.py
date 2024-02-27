@@ -1,5 +1,4 @@
-import requests
-from requests import Request, Session
+from requests import Session
 from requests.exceptions import Timeout, ConnectionError, TooManyRedirects
 from colorama import Back, Style, init as colorama_init
 import os
@@ -139,8 +138,7 @@ def open_token_page(key_name, key_val, session):
             params["limit"] = PAIRS_NUM_LIMIT
 
             print_temp_text(
-                url +
-                f"?start={start_num}&limit={PAIRS_NUM_LIMIT}", None, Back.YELLOW
+                url + f"?start={start_num}&limit={PAIRS_NUM_LIMIT}", None, Back.YELLOW
             )
             response = session.get(url, params=params)
             if response.ok:
@@ -167,8 +165,7 @@ def open_token_page(key_name, key_val, session):
             json.dump(market_pairs, f)
 
     except Exception as e:
-        print(
-            Back.RED, f"Exception in open_token_page func: {e}", Style.RESET_ALL)
+        print(Back.RED, f"Exception in open_token_page func: {e}", Style.RESET_ALL)
     print("")
 
 
@@ -177,13 +174,11 @@ def main():
     ids = get_all_tokens_id()
     print(len(ids))
     for id in ids:
-        open_token_page('id', id, session)
+        open_token_page("id", id, session)
     build_min_max_cost_pairs("bitcoin")
 
 
 main()
-
-
 # open_token_page('id', 1, session)
 # open_token_page("symbol", "BTC", session)
 # open_token_page('symbol', 'ETH', session)
