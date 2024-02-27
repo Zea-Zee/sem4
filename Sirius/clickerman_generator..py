@@ -1,11 +1,12 @@
 f = open("res.txt", "w")
 
+
 def type_text(text):
     res = "WHILE(1)\n"
     res += "\t\tLCLICK(1770,1017)\n"
     res += "\t\tWAITMS(50)\n"
     for char in text:
-        if char == ' ' or char == '\n' or char == '()' or char == ')':
+        if char == " " or char == "\n" or char == "()" or char == ")":
             # print(f"char{char}:{char == ' '}")
             res += "\t\tKEYDOWN(#ENTER)\n"
             res += "\t\tWAITMS(100)\n"
@@ -22,6 +23,7 @@ def type_text(text):
     res += "END_CYC"
     return res
 
+
 # banned = """nigger, nigga, naga, ниггер, нига, нага
 #     faggot, пидор, пидорас, педик, гомик, петух (если не подразумевается птица)
 #     хохол, хач, жид
@@ -32,7 +34,9 @@ def type_text(text):
 #     куколд
 #     белый, натурал, гетеросексуал"""
 
-banned = "nigger pidor daun gondon kartaviy faggot snitch virgin simp incel cunt retard naga"
+banned = (
+    "nigger pidor daun gondon kartaviy faggot snitch virgin simp incel cunt retard naga"
+)
 
 # print(type_text(banned))
 res = type_text(banned)

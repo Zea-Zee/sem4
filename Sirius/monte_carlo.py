@@ -16,6 +16,7 @@ def count_pi(n):
     print(f"Estimated time: {time.time() - start} s")
     return 4 * (count / n)
 
+
 print(count_pi(10000000))
 print(count_pi(100000000))
 print(count_pi(1000000000))

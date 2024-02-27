@@ -1,10 +1,10 @@
 import yolov5
 
 # model
-model = yolov5.load('yolov5s')
+model = yolov5.load("yolov5s")
 
 # image
-img = 'https://github.com/ultralytics/yolov5/raw/master/data/images/zidane.jpg'
+img = "https://github.com/ultralytics/yolov5/raw/master/data/images/zidane.jpg"
 
 # inference
 results = model(img)
@@ -19,4 +19,4 @@ results = model(img, augment=True)
 results.show()
 
 # save results
-results.save(save_dir='results/')
+results.save(save_dir="results/")
