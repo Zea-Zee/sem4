@@ -4,24 +4,27 @@ const submitButton = document.getElementById('parser-submit-button');
 
 let suggestions = []
 
+document.addEventListener("DOMContentLoaded", async function() {
+    try {
+        const response = await fetch('/check');
+        const data = await response.json();
+        suggestions = data.suggestions;
+        console.log("Pedning and data is", data)
+    } catch (error) {
+        console.error('Error fetching suggestions:', error);
+    }
+});
+
+
 input.addEventListener('input', async function(event) {
     const inputValue = input.value.trim();
     if (inputValue.length === 0) {
         suggestionsContainer.classList.remove('open');
         return;
     }
-
     try {
-        if(suggestions.length === 0){
-            const response = await fetch(`/check?query=${inputValue}`);
-            const data = await response.json();
-            suggestions = data.suggestions;
-        }
-
         suggestionsContainer.innerHTML = '';
-
         const matchingSuggestions = suggestions.filter(suggestion => suggestion.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1);
-
         matchingSuggestions.forEach((suggestion) => {
             const suggestionElement = document.createElement('div');
             suggestionElement.textContent = suggestion;
@@ -36,7 +39,7 @@ input.addEventListener('input', async function(event) {
 
         suggestionsContainer.classList.add('open');
     } catch (error) {
-        console.error('Error fetching suggestions:', error);
+        console.error('Error in rendering suggestions:', error);
     }
 });
 

@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect
 import sqlite3
 from my_parser import mvideo_prod_cards_parser
 import os
@@ -72,10 +72,10 @@ print_all_urls(db_path)
 
 @app.route("/check", methods=["GET"])
 def check():
-    query = request.args.get("query")
+    # query = request.args.get("query")
     conn = sqlite3.connect(db_path, check_same_thread=False)
     cursor = conn.cursor()
-    cursor.execute("SELECT url FROM suggestions WHERE url LIKE ?", ("%" + query + "%",))
+    cursor.execute("SELECT url FROM suggestions")
     suggestions = [row[0] for row in cursor.fetchall()]
     conn.close()
     return jsonify({"suggestions": suggestions})
@@ -92,7 +92,7 @@ def parse_url():
         if 'mvideo.ru' in url:
             parsed_data = mvideo_prod_cards_parser(url)
             # print(parsed_data)
-            if parsed_data:
+            if isinstance(parsed_data, list):
                 return jsonify({
                     "products": parsed_data,
                     "status": "success"
@@ -117,6 +117,11 @@ def parse_page():
     suggestions = [row[0] for row in cursor.fetchall()]
     conn.close()
     return render_template("parse_page.html", suggestions=suggestions)
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return redirect("/parsepage")
 
 
 if __name__ == "__main__":

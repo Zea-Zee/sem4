@@ -27,13 +27,15 @@ def get_driver(headless=False):
 
 def mvideo_prod_cards_parser(url: str) -> str:
     try:
-        driver = get_driver()
+        driver = get_driver(headless=False)
         driver.get(url)
-
-        wait = WebDriverWait(driver, 20)  # Увеличенное время ожидания - 20 секунд
-        product_cars_rows = wait.until(
-            EC.visibility_of_all_elements_located((By.CLASS_NAME, "product-cards-row"))
-        )
+        wait = WebDriverWait(driver, 30)
+        wait.until(EC.presence_of_element_located((By.TAG_NAME, 'html')))
+        wait.until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
+        wait.until(EC.visibility_of_any_elements_located((By.CLASS_NAME, "product-picture__img")))
+        wait.until(EC.visibility_of_any_elements_located((By.CLASS_NAME, "price__main-value")))
+        wait.until(EC.visibility_of_any_elements_located((By.CLASS_NAME, "cart-button")))
+        product_cars_rows = wait.until(EC.visibility_of_all_elements_located((By.CLASS_NAME, "product-cards-row")))
 
         # Перебор всех карточек товаров
         products = []
@@ -56,7 +58,7 @@ def mvideo_prod_cards_parser(url: str) -> str:
                 products.append(product)
 
         driver.quit()
-        print(f"There are {len(products)} product cards")
+        # print(f"There are {len(products)} product cards")
         # print(f"Products are {products} product cards")
         return products
     except Exception as e:
