@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  my_parser:
+    build: .
+    container_name: parser
+    restart: always
+    ports:
+      - "8001:5001"  # Проброс портов для приложения Flask
+    # ports:
+    #   - "8001:5001"  # Проброс портов для первого приложения
+    # volumes:
+    #   - ./app:/app  # Монтируем локальную директорию с кодом в контейнер
+    # environment:
+    #   - FLASK_APP=server.py
+    #   - FLASK_RUN_HOST=0.0.0.0
+    #   - FLASK_RUN_PORT=5001

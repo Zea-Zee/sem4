@@ -1,33 +1,44 @@
 import random
 import time
-import json
-from colorama import Back, init as colorama_init
+from colorama import Fore, Back, init as colorama_init
 from fake_useragent import UserAgent
 from selenium import webdriver
+# from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.safari.service import Service
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-import requests.exceptions
+from webdriver_manager.chrome import ChromeDriverManager
 
 
 colorama_init()
 
 
 def get_driver(headless=False):
+    # chrome_options = Options()
+    # user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36"
+    # chrome_options.add_argument(f"user-agent={user_agent}")
+    # if headless:
+    #     chrome_options.add_argument('--headless')
+    # return webdriver.Chrome(options=chrome_options)
     chrome_options = Options()
-    chrome_options.headless = False
     user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36"
     chrome_options.add_argument(f"user-agent={user_agent}")
-    return webdriver.Chrome(options=chrome_options)
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    return driver
 
 
 def mvideo_prod_cards_parser(url: str) -> str:
     try:
-        driver = get_driver(headless=False)
+        driver = get_driver(headless=True)
         driver.get(url)
         wait = WebDriverWait(driver, 30)
         wait.until(EC.presence_of_element_located((By.TAG_NAME, 'html')))
@@ -58,11 +69,11 @@ def mvideo_prod_cards_parser(url: str) -> str:
                 products.append(product)
 
         driver.quit()
-        # print(f"There are {len(products)} product cards")
-        # print(f"Products are {products} product cards")
+        print(f"{Back.GREEN}There are {len(products)} product cards{Back.RESET}")
+        print(f"{Fore.GREEN}{products}{Fore.RESET}")
         return products
     except Exception as e:
-        # print(f"An exception occurred in mvideo_prod_cards_parser: {e}")
+        print(f"{Back.RED}An exception occurred in mvideo_prod_cards_parser: {e}{Back.RESET}")
         return f"An exception occurred in mvideo_prod_cards_parser: {e}"
 
 
