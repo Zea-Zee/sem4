@@ -1,0 +1,6 @@
+git clone https://github.com/open-mmlab/mmaction2.git
+cd mmaction2
+pip install -v -e .
+# $env:PYTHONPATH += ";C:\Users\kuzga\AppData\Local\Programs\Python\Python311\Lib\site-packages"
+# pip install -e C:\Users\kuzga\OneDrive\Рабочий стол\sem4\PHC\labs\lab4(mmaction)\mmaction2
+mim download mmaction2 --config tsn_imagenet-pretrained-r50_8xb32-1x1x8-100e_kinetics400-rgb --dest .
