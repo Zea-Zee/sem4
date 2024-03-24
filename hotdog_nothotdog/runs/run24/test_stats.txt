@@ -1,0 +1,3 @@
+Test Loss: 0.0000, Test Accuracy: 0.9519, Test Precision: 0.9369, Test Recall: 0.9689, Test F1-score: 0.9527
+BS: 32, epochs: 20, -L2, +scheduler, -augm, BCELoss
+Test Loss: 0.0000, Test Accuracy: 0.9596, Test Precision: 0.9596, Test Recall: 0.9596, Test F1-score: 0.9596Test Loss: 0.0000, Test Accuracy: 0.9596, Test Precision: 0.9596, Test Recall: 0.9596, Test F1-score: 0.9596Test Loss: 0.0000, Test Accuracy: 0.9596, Test Precision: 0.9596, Test Recall: 0.9596, Test F1-score: 0.9596
