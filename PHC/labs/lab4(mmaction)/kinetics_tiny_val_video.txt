@@ -1,0 +1,5 @@
+karate_fighting_8.mp4 0
+karate_fighting_9.mp4 0
+teaching_12.mp4 1
+teaching_13.mp4 1
+teaching_14.mp4 1
