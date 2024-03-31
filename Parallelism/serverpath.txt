@@ -1,0 +1,1 @@
+scp -P 10023 ./ g.kuznetsov2@84.237.51.129:/home/g.kuznetsov2
