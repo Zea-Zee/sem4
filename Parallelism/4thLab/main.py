@@ -111,9 +111,10 @@ def main():
     sensor_x3_data = 0
     cam_frame = sensor_cam.queue.get()
     
+    print("Start processing")    
     try:
         while True:
-            print("Start processing")
+
             while not sensor_cam.queue.empty():
                 cam_frame = sensor_cam.queue.get()
             while not sensor_x2.queue.empty():
