@@ -1,7 +1,7 @@
 // PARAMETERS SECTION
 
 // Enable или disable OpenACC
-#define IS_ACC 1
+#define IS_ACC 0
 
 // output file name
 #define OUT_FILE "result.dat"

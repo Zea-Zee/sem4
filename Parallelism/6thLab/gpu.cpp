@@ -5,11 +5,11 @@
 
 // mesh size
 #ifndef NX
-#define NX 30
+#define NX 128
 #endif
 
 #ifndef NY
-#define NY 20
+#define NY 128
 #endif
 
 // parameters
