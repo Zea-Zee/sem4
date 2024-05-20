@@ -1,12 +1,12 @@
 // PARAMETERS SECTION
 
-// Enable or disable OpenACC
+// Enable или disable OpenACC
 #define IS_ACC 1
 
 // output file name
 #define OUT_FILE "result.dat"
 
-// parameters
+// параметры
 #define TAU -0.01
 
 // END OF PARAMETERS SECTION
@@ -25,8 +25,6 @@ namespace po = boost::program_options;
 unsigned int NX, NY, SIZE;
 unsigned long long ITER;
 double EPS;
-
-// vector size (dynamic)
 
 // get matrix value (SIZE x SIZE)
 double get_a(int row, int col) {
@@ -111,11 +109,14 @@ void solve_simple_iter(double *A, double *x, double *b) {
 
     Axmb = (double*)malloc(SIZE * sizeof(double));
 
-    for(long long i = 0; i < ITER && norm_Axmb / norm_b >= EPS; i++){
+    for(long long i = 0; i < ITER; i++) {
         mul_mv_sub(Axmb, A, x, b);
         norm_Axmb = norm(Axmb);
+        if (norm_Axmb / norm_b < EPS) {
+            break;
+        }
         next(x, Axmb);
-        if(i % 100){
+        if(i % 100 == 0) {
             printf("%lf >= %lf\r", norm_Axmb / norm_b, EPS);
             fflush(stdout);
         }
@@ -180,6 +181,3 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
-
-
-./multi --NX 100 --NY 100 --EPS 1e-6 --ITER 10000
