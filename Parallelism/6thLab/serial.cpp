@@ -1,18 +1,18 @@
 // PARAMETERS SECTION
 
 // Enable or disable OpenACC
-#define IS_ACC 0
+#define IS_ACC 1
 
 // output file name
 #define OUT_FILE "result.dat"
 
 // mesh size
 #ifndef NX
-#define NX 5
+#define NX 32
 #endif
 
 #ifndef NY
-#define NY 5
+#define NY 32
 #endif
 
 // parameters

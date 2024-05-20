@@ -1,88 +1,185 @@
-/*
- * Copyright (c) 2019, NVIDIA CORPORATION.  All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// PARAMETERS SECTION
 
-#include <string.h>
+// Enable or disable OpenACC
+#define IS_ACC 1
+
+// output file name
+#define OUT_FILE "result.dat"
+
+// parameters
+#define TAU -0.01
+
+// END OF PARAMETERS SECTION
+
+#include <math.h>
 #include <stdio.h>
-#include <cstdlib>
-#include "laplace2d.hpp"
-#include <nvtx3/nvToolsExt.h>
+#include <stdlib.h>
+#include <string.h>
+#include <iostream>
+#include <chrono>
 #include <boost/program_options.hpp>
 
-#include <chrono>
-#include <iostream>
-
+using namespace std;
 namespace po = boost::program_options;
 
-int main(int argc, char **argv)
-{
-    int n = 1024;
-    double err = 1.0e-6;
-    int iter_max = 1000000;
+unsigned int NX, NY, SIZE;
+unsigned long long ITER;
+double EPS;
 
+// vector size (dynamic)
+
+// get matrix value (SIZE x SIZE)
+double get_a(int row, int col) {
+    if (row == col) return -4;
+    if (row + 1 == col) return 1;
+    if (row - 1 == col) return 1;
+    if (row + NX == col) return 1;
+    if (row - NX == col) return 1;
+    return 0;
+}
+
+double get_b(int idx) {
+    // some heat input/output
+    if (idx == NY / 2 * NX + NX / 3) return 10;
+    if (idx == NY * 2 / 3 * NX + NX * 2 / 3) return -25;
+    return 0;
+}
+
+void init_matrix(double *M) {
+    int i, j;
+
+#if IS_ACC
+#pragma acc parallel loop collapse(2)
+#endif
+    for (i = 0; i < SIZE; i++)
+        for (j = 0; j < SIZE; j++)
+            M[i * SIZE + j] = get_a(i, j);
+}
+
+void init_b(double *b) {
+    int i;
+
+#if IS_ACC
+#pragma acc parallel loop
+#endif
+    for (i = 0; i < SIZE; i++)
+        b[i] = get_b(i);
+}
+
+double norm(double *x) {
+    double result = 0;
+    int i;
+
+#if IS_ACC
+#pragma acc parallel loop reduction(+:result)
+#endif
+    for (i = 0; i < SIZE; i++)
+        result += x[i] * x[i];
+
+    return sqrt(result);
+}
+
+// res = Ax-y
+void mul_mv_sub(double *res, double *A, double *x, double *y) {
+    int i, j;
+
+#if IS_ACC
+#pragma acc parallel loop private(j)
+#endif
+    for (i = 0; i < SIZE; i++) {
+        res[i] = -y[i];
+        for (j = 0; j < SIZE; j++)
+            res[i] += A[i * SIZE + j] * x[j];
+    }
+}
+
+// x -= TAU * delta
+void next(double *x, double *delta) {
+    int i;
+
+#if IS_ACC
+#pragma acc parallel loop
+#endif
+    for (i = 0; i < SIZE; i++)
+        x[i] -= TAU * delta[i];
+}
+
+void solve_simple_iter(double *A, double *x, double *b) {
+    double *Axmb, norm_b, norm_Axmb;
+
+    norm_b = norm(b);
+
+    Axmb = (double*)malloc(SIZE * sizeof(double));
+
+    for(long long i = 0; i < ITER && norm_Axmb / norm_b >= EPS; i++){
+        mul_mv_sub(Axmb, A, x, b);
+        norm_Axmb = norm(Axmb);
+        next(x, Axmb);
+        if(i % 100){
+            printf("%lf >= %lf\r", norm_Axmb / norm_b, EPS);
+            fflush(stdout);
+        }
+    }
+
+    printf("\33[2K\r");
+    fflush(stdout);
+
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            cout << Axmb[i * j] << "\t\t";
+        }
+        cout << '\n';
+    }
+
+    free(Axmb);
+}
+
+int main(int argc, char *argv[]) {
+    // Define and parse command-line arguments
     po::options_description desc("Allowed options");
     desc.add_options()
-            ("n", po::value<int>(&n))
-            ("iter", po::value<int>(&iter_max))
-            ("err", po::value<double>(&err))
-            ("draw", "Draw output matrix");
+        ("help", "produce help message")
+        ("NX", po::value<unsigned int>(&NX)->default_value(10), "set NX")
+        ("NY", po::value<unsigned int>(&NY)->default_value(10), "set NY")
+        ("EPS", po::value<double>(&EPS)->default_value(1e-5), "set EPS")
+        ("ITER", po::value<unsigned long long>(&ITER)->default_value(1000), "set ITER");
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);
     po::notify(vm);
 
+    if (vm.count("help")) {
+        cout << desc << "\n";
+        return 1;
+    }
 
+    SIZE = NX * NY;
 
-    double error = 1.0;
+    double *A, *b, *x;
+    FILE *f;
 
-
-    n+=2;
-    Laplace a(n, n);
-    nvtxRangePushA("init");
-    std::vector<std::pair<int, double>> heat_points({std::make_pair(n + 1, 10),
-                                                      std::make_pair(2 * n - 2 , 20),
-                                                      std::make_pair(n * n - 2 * n + 1, 30),
-                                                      std::make_pair(n * n - n - 2, 40)
-                                                     });
-
-    a.initialize(heat_points);
-    nvtxRangePop();
-    printf("Jacobi relaxation Calculation: %d x %d mesh\n", n-2, n-2);
+    A = (double*)malloc(SIZE * SIZE * sizeof(double));
+    b = (double*)malloc(SIZE * sizeof(double));
+    x = (double*)malloc(SIZE * sizeof(double));
 
     auto start = std::chrono::high_resolution_clock::now();
-    int iter = 0;
-
-    nvtxRangePushA("while");
-    while (error > err && iter < iter_max)
-    {
-        nvtxRangePushA("calc");
-        error = a.calcNext();
-        nvtxRangePop();
-
-        nvtxRangePushA("swap");
-        a.swap();
-        nvtxRangePop();
-        iter++;
-    }
-    nvtxRangePop();
-
+    init_matrix(A);
+    init_b(b);
+    memset(x, 0, sizeof(double) * SIZE);
+    solve_simple_iter(A, x, b);
     auto runtime = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start);
-    printf("%5d, %0.6f\n", iter, error);
-    std::cout << "TIME: " << runtime.count() / 1000000. <<std::endl;
-    if (vm.count("draw")) {
-        a.draw_field(n);
-    }
+    cout << "TIME: " << runtime.count() / 1000000. << endl;
+
+    f = fopen(OUT_FILE, "wb");
+    fwrite(x, sizeof(double), SIZE, f);
+    fclose(f);
+
+    free(A);
+    free(b);
+    free(x);
+
     return 0;
 }
+
+
+./multi --NX 100 --NY 100 --EPS 1e-6 --ITER 10000
