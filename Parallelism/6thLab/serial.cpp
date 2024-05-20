@@ -1,11 +1,14 @@
 // PARAMETERS SECTION
 
+// Enable or disable OpenACC
+#define IS_ACC 1
+
 // output file name
 #define OUT_FILE "result.dat"
 
 // mesh size
 #ifndef NX
-#define NX 30
+#define NX 128
 #endif
 
 #ifndef NY
@@ -26,10 +29,7 @@
 #include <chrono>
 
 // vector size
-#define SIZE ((NX)*(NY))
-
-// Enable or disable OpenACC
-#define IS_ACC 1
+#define SIZE ((NX)*(NX))
 
 
 using namespace std;
