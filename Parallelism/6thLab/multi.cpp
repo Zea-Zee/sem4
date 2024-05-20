@@ -1,7 +1,7 @@
 // PARAMETERS SECTION
 
 // Enable или disable OpenACC
-#define IS_ACC 0
+#define IS_ACC 1
 
 // output file name
 #define OUT_FILE "result.dat"
@@ -116,7 +116,7 @@ void solve_simple_iter(double *A, double *x, double *b) {
             break;
         }
         next(x, Axmb);
-        if(i % 1000 == 0) {
+        if(i % 100 == 0) {
             printf("%lf >= %lf\t%lld\r", norm_Axmb / norm_b, EPS, i);
             fflush(stdout);
         }
