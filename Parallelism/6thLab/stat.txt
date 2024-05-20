@@ -1,1 +1,5 @@
-128 parallel: TIME: 765.891
+128 parallel:   TIME: 765.891
+64 acc:         TIME: 94.464
+
+32 serial:      TIME: 8.85966
+64 serual:      TIME: 382.162
