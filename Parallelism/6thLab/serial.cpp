@@ -23,8 +23,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <chrono>
+#include <iostream>
+
 // vector size
 #define SIZE ((NX)*(NY))
+
+
+using namespace std;
 
 // get matrix value (SIZE x SIZE)
 double get_a(int row, int col) {
@@ -120,10 +126,13 @@ int main() {
 	init_b(b);
 	memset(x, 0, sizeof(double)*SIZE);
 
+
+    auto start = std::chrono::high_resolution_clock::now();
 	solve_simple_iter(A, x, b);
+    auto runtime = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start);
+    cout << "TIME: " << runtime.count() / 1000000. << endl;
 
 	f = fopen(OUT_FILE, "wb");
-
 	fwrite(x, sizeof(double), SIZE, f);
 	fclose(f);
 
