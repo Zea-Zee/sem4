@@ -116,8 +116,8 @@ void solve_simple_iter(double *A, double *x, double *b) {
             break;
         }
         next(x, Axmb);
-        if(i % 100 == 0) {
-            printf("%lf >= %lf\r", norm_Axmb / norm_b, EPS);
+        if(i % 1000 == 0) {
+            printf("%lf >= %lf\t%lld\r", norm_Axmb / norm_b, EPS, i);
             fflush(stdout);
         }
     }
@@ -125,12 +125,12 @@ void solve_simple_iter(double *A, double *x, double *b) {
     printf("\33[2K\r");
     fflush(stdout);
 
-    for (int i = 0; i < SIZE; i++) {
-        for (int j = 0; j < SIZE; j++) {
-            cout << Axmb[i * j] << "\t\t";
-        }
-        cout << '\n';
-    }
+    // for (int i = 0; i < SIZE; i++) {
+    //     for (int j = 0; j < SIZE; j++) {
+    //         cout << Axmb[i * j] << "\t\t";
+    //     }
+    //     cout << '\n';
+    // }
 
     free(Axmb);
 }
@@ -181,3 +181,6 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
+
+
+//./multi --NX 32 --NY 32 --EPS 1e-6 --ITER 10000
