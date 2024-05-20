@@ -12,7 +12,7 @@
 #endif
 
 #ifndef NY
-#define NY 20
+#define NY 128
 #endif
 
 // parameters
