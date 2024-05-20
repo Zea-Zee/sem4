@@ -148,6 +148,13 @@ int main() {
     auto runtime = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start);
     cout << "TIME: " << runtime.count() / 1000000. << endl;
 
+	for(int i = 0; i < SIZE; i++){
+		for(int j = 0; j < SIZE; j++){
+			cout << A[i * j];
+		}
+		cout << '\n';
+	}
+
 	f = fopen(OUT_FILE, "wb");
 	fwrite(x, sizeof(double), SIZE, f);
 	fclose(f);

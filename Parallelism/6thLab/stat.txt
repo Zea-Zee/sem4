@@ -1,5 +1,10 @@
 128 parallel:   TIME: 765.891
 64 acc:         TIME: 94.464
+32 acc:         
 
-32 serial:      TIME: 8.85966
 64 serual:      TIME: 382.162
+32 serial:      TIME: 8.85966
+
+128 gpu acc:
+64 gpu acc:     TIME: 88.899
+32 gpu acc:     TIME: 20.5226
