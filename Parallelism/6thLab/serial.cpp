@@ -8,11 +8,11 @@
 
 // mesh size
 #ifndef NX
-#define NX 128
+#define NX 5
 #endif
 
 #ifndef NY
-#define NY 128
+#define NY 5
 #endif
 
 // parameters
@@ -60,7 +60,6 @@ void init_matrix(double *M) {
     for (i=0; i<SIZE; i++)
         for (j=0; j<SIZE; j++)
             M[i*SIZE+j] = get_a(i, j);
-}
 
 void init_b(double *b) {
 	int i;
@@ -128,6 +127,14 @@ void solve_simple_iter(double *A, double *x, double *b) {
 	printf("\33[2K\r");
 	fflush(stdout);
 
+
+	for(int i = 0; i < SIZE; i++){
+		for(int j = 0; j < SIZE; j++){
+			cout << Axmb[i * j];
+		}
+		cout << '\n';
+	}
+
 	free(Axmb);
 }
 
@@ -147,13 +154,6 @@ int main() {
 	solve_simple_iter(A, x, b);
     auto runtime = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start);
     cout << "TIME: " << runtime.count() / 1000000. << endl;
-
-	for(int i = 0; i < SIZE; i++){
-		for(int j = 0; j < SIZE; j++){
-			cout << A[i * j];
-		}
-		cout << '\n';
-	}
 
 	f = fopen(OUT_FILE, "wb");
 	fwrite(x, sizeof(double), SIZE, f);
