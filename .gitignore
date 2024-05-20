@@ -6,3 +6,11 @@ networks/data/small_market_pairs/**
 /hotdog_nothotdog/dataset/**
 /hotdog_nothotdog/runs/**
 PHC/labs/lab4(mmaction)/mmaction2/**
+
+
+/.flaskvenv/
+/build/
+**/*env*
+**/*cache*
+**/*.db*
+**/*vscode*
