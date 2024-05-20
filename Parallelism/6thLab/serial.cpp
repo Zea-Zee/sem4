@@ -60,6 +60,7 @@ void init_matrix(double *M) {
     for (i=0; i<SIZE; i++)
         for (j=0; j<SIZE; j++)
             M[i*SIZE+j] = get_a(i, j);
+}
 
 void init_b(double *b) {
 	int i;
