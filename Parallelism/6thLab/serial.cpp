@@ -22,9 +22,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include <chrono>
 #include <iostream>
+#include <chrono>
 
 // vector size
 #define SIZE ((NX)*(NY))

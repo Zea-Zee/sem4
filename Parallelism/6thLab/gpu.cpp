@@ -22,9 +22,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <iostream>
+#include <chrono>
 
 // vector size
 #define SIZE ((NX)*(NY))
+
+
+using namespace std;
 
 // get matrix value (SIZE x SIZE)
 double get_a(int row, int col) {
