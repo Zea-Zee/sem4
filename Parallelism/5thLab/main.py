@@ -13,11 +13,9 @@ def fun_thread_read(path_video: str, frame_queue: Queue, event_stop: threading.E
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
-            print("Can't receive frame!")
             break
         frame_queue.put((frame, ind))
         ind += 1
-        # time.sleep(0.0001)
     event_stop.set()
 
 
