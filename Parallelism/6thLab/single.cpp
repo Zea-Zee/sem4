@@ -103,7 +103,7 @@ void next(double *x, double *delta) {
 }
 
 void solve_simple_iter(double *A, double *x, double *b) {
-    printf("solve_simple_iter\r");
+    printf("solve_simple_iter\r",);
 
     double *Axmb, norm_b, norm_Axmb;
 

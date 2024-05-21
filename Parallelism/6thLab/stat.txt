@@ -1,10 +1,12 @@
-128 parallel:   TIME: 765.891
-64 acc:         TIME: 94.464
-32 acc:
+Accuracy: 0.01
 
-64 serual:      TIME: 382.162
-32 serial:      TIME: 8.85966
+128x128 parallel:   TIME: 765.891
+64x64 acc:          TIME: 94.464
+32x32 acc:
 
-128 gpu acc:    TIME: 1523.72
-64 gpu acc:     TIME: 88.899
-32 gpu acc:     TIME: 20.5226
+64x64 serial:       TIME: 382.162
+32x32 serial:       TIME: 8.85966
+
+128x128 gpu acc:    TIME: 1523.72
+64x64 gpu acc:      TIME: 88.899
+32x32 gpu acc:      TIME: 20.5226

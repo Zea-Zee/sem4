@@ -144,7 +144,7 @@ int main(int argc, char *argv[]) {
         ("help", "produce help message")
         ("NX", po::value<unsigned int>(&NX)->default_value(10), "set NX")
         ("NY", po::value<unsigned int>(&NY)->default_value(10), "set NY")
-        ("EPS", po::value<double>(&EPS)->default_value(1e-5), "set EPS")
+        ("TOLERANCE", po::value<double>(&EPS)->default_value(1e-5), "set EPS")
         ("ITER", po::value<unsigned long long>(&ITER)->default_value(1000), "set ITER");
 
     po::variables_map vm;
