@@ -1,0 +1,2 @@
+Jacobi relaxation Calculation: 1024 x 1024 mesh, nan tolerance -1 max iters
+Time: 113.270625 s

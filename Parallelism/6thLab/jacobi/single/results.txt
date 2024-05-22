@@ -1,0 +1,16 @@
+Jacobi relaxation Calculation: 128 x 128 mesh, 1e-06 tolerance 4294967295 max iters
+Iterations: 36682
+Time: 1.35681 s
+
+Jacobi relaxation Calculation: 256 x 256 mesh, 1e-06 tolerance 4294967295 max iters
+Iterations: 124931
+Time: 19.8022 s
+
+Jacobi relaxation Calculation: 512 x 512 mesh, 1e-06 tolerance 4294967295 max iters
+Iterations: 409740
+Time: 244.504 s
+
+Jacobi relaxation Calculation: 1024 x 1024 mesh, 1e-06 tolerance 4294967295 max iters
+Iterations: 1274163
+Time: 3051.94 s
+
