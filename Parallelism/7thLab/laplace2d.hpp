@@ -25,16 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef LAPLACE2D_HPP
-#define LAPLACE2D_HPP
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <cstring>
+#include <omp.h>
+#include <nvtx3/nvToolsExt.h>
+#include <boost/program_options.hpp>
+#include <chrono>
+#include <iostream>
+#include <fstream>
+#include <limits>
 
 #include <cublas_v2.h>
 #include <cuda_runtime.h>
 
 void initialize(double *restrict A, double *restrict Anew, int m, int n);
-double calcNext(double *restrict A, double *restrict Anew, int m, int n, cublasHandle_t handle);
-void swap(double *restrict A, double *restrict Anew, int m, int n);
-void print_arr(double *restrict A, double *restrict Anew, int m, int n);
-void deallocate(double *restrict A, double *restrict Anew);
 
-#endif // LAPLACE2D_HPP
+double calcNext(double *restrict A, double *restrict Anew, int m, int n, cublasHandle_t handle);
+
+void swap(double *restrict A, double *restrict Anew, int m, int n);
+
+void print_arr(double *restrict A, double *restrict Anew, int m, int n);
+
+void deallocate(double *restrict A, double *restrict Anew);

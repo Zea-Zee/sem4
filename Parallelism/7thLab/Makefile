@@ -23,7 +23,7 @@ $(EXEC): $(OBJS)
 # Правило для запуска программы с аргументами
 run: $(EXEC)
 	export CUDA_VISIBLE_DEVICES=1
-	./$(EXEC) --NX 512 --NY 512
+	./$(EXEC) --NX 128 --NY 128
 
 # Правило для очистки объектных файлов
 .PHONY: clean clean_obj
