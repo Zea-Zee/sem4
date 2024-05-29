@@ -7,6 +7,7 @@
 #include <cublas_v2.h>
 #include <cuda_runtime.h>
 
+
 #define OFFSET(x, y, m) (((x)*(m)) + (y))
 
 void initialize(double *restrict A, double *restrict Anew, int m, int n){
@@ -33,26 +34,42 @@ void initialize(double *restrict A, double *restrict Anew, int m, int n){
 }
 
 double calcNext(double *restrict A, double *restrict Anew, int m, int n, cublasHandle_t handle){
-
     double error = 0.0;
-    const double alpha = 1.0 / 5.0;
-    const double beta = 0.0;
+    int numElements = (n - 2);
+    double* d_errors;
 
-    #pragma acc parallel loop reduction(max:error) present(A,Anew) vector_length(128) async
-    for( int j = 1; j < n-1; j++){
-        #pragma acc loop
-        for( int i = 1; i < m-1; i++ ){
-            Anew[OFFSET(j, i, m)] = ( A[OFFSET(j, i, m)] + A[OFFSET(j, i+1, m)] + A[OFFSET(j, i-1, m)] + A[OFFSET(j-1, i, m)] + A[OFFSET(j+1, i, m)]) / 5;
-            error = fmax( error, fabs(Anew[OFFSET(j, i, m)] - A[OFFSET(j, i , m)]));
+    // Allocate memory for errors on the device
+    cudaMalloc((void**)&d_errors, numElements * sizeof(double));
+
+#pragma acc parallel loop present(A, Anew) deviceptr(d_errors) async
+    for (int j = 1; j < n - 1; j++) {
+#pragma acc loop
+        for (int i = 1; i < m - 1; i++) {
+            int points = 5;
+            if (i == 1 || i == m - 2) points--;
+            if (j == 1 || j == n - 2) points--;
+            Anew[OFFSET(j, i, n)] = (A[OFFSET(j, i + 1, n)] + A[OFFSET(j, i - 1, n)] +
+                                     A[OFFSET(j - 1, i, n)] + A[OFFSET(j + 1, i, n)] +
+                                     A[OFFSET(j, i, n)]) / points;
+            d_errors[j - 1]  = fmax(error, fabs(Anew[OFFSET(j, i, n)] - A[OFFSET(j, i, n)]));
         }
 
-        #pragma acc loop
-        for( int i = 1; i < m-1; i++ ) A[OFFSET(j, i, m)] = Anew[OFFSET(j, i, m)];
-    }
-    #pragma acc wait
 
+    }
+#pragma acc wait
+
+    // Use cuBLAS to find the maximum error
+
+    int maxIndex;
+    cublasIdamax(handle, numElements, d_errors, 1, &maxIndex);
+
+    cudaMemcpy(&error, &d_errors[maxIndex - 1], sizeof(double), cudaMemcpyDeviceToHost);
+
+//    cublasDestroy(handle);
+    cudaFree(d_errors);
     return error;
 }
+
 
 void swap(double *restrict A, double *restrict Anew, int m, int n){
     #pragma acc parallel loop present(A,Anew) gang vector_length(128) async

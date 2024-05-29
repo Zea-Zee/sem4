@@ -10,8 +10,10 @@
 #include <iostream>
 #include <fstream>
 #include <limits>
+
 #include <cublas_v2.h>
 #include <cuda_runtime.h>
+
 
 using namespace std;
 namespace po = boost::program_options;
@@ -56,6 +58,7 @@ int main(int argc, char** argv){
 
     cublasHandle_t handle;
     cublasCreate(&handle);
+
     nvtxRangePushA("while");
     while (error > tol && iter < iter_max )
     {
@@ -94,7 +97,6 @@ int main(int argc, char** argv){
     }
 
     deallocate(A, Anew);
-    cublasDestroy(handle);
     results_file.close();
 
     return 0;
