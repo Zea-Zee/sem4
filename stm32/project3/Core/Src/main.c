@@ -13,10 +13,11 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
-#include "semphr.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "semphr.h"
+#include "stm32f4xx_hal.h"
 
 /* USER CODE END Includes */
 
@@ -47,7 +48,7 @@ osThreadId_t task2Handle;
 const osThreadAttr_t task2_attributes = {
   .name = "task2",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for task3 */
 osThreadId_t task3Handle;
@@ -58,6 +59,8 @@ const osThreadAttr_t task3_attributes = {
 };
 /* USER CODE BEGIN PV */
 long long counter = 0;
+long long localCounter1 = 0;
+long long localCounter2 = 0;
 char task1State = 0;
 char task2State = 0;
 char task3State = 0;
@@ -108,6 +111,9 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
+  RCC->AHB1ENR |= (1<<6) | (1<<0);
+  GPIOG->MODER &= ~(0b1111<<26);
+  GPIOG->MODER |= (1<<26) | (1<<28);
 
   /* USER CODE END 2 */
 
@@ -230,7 +236,6 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOG_CLK_ENABLE(); // Enable GPIOG clock
 
   /*Configure GPIO pin : Key_Pin */
   GPIO_InitStruct.Pin = Key_Pin;
@@ -238,12 +243,14 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(Key_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins for LEDs on GPIOG */
-  GPIO_InitStruct.Pin = GPIO_PIN_13 | GPIO_PIN_14;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  /*Configure GPIO pin : PA7 */
+  GPIO_InitStruct.Pin = GPIO_PIN_7;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+  GPIO_InitStruct.Alternate = GPIO_AF2_TIM3;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
 }
 
 /* USER CODE BEGIN 4 */
@@ -262,17 +269,21 @@ void StartTask1(void *argument)
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
   for(;;){
+	localCounter1 += 1;
     if(xSemaphoreTake(xSemaphore, (TickType_t)100)) {
+    	GPIOG -> ODR = ((GPIOG -> ODR & (1 << 13)) << 16) | (~GPIOG->ODR & (1 << 13));
+
     	task1State = 1;
     	task2State = 0;
     	task3State = 0;
-    	HAL_GPIO_WritePin(GPIOG, GPIO_PIN_14, GPIO_PIN_RESET);
-    	HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_13); // Toggle RED LED
-    	osDelay(2000);
+//    	HAL_GPIO_WritePin(GPIOG, GPIO_PIN_14, GPIO_PIN_RESET);
+//    	HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_13); // Toggle RED LED
+//    	osDelay(2000);
     	task1State = -1;
+    	counter += localCounter1;
     	xSemaphoreGive(xSemaphore);
     }
-    osDelay(2002); // Delay to allow other tasks to run
+    osDelay(1); // Delay to allow other tasks to run
   }
   /* USER CODE END 5 */
 }
@@ -289,17 +300,21 @@ void StartTask2(void *argument)
   /* USER CODE BEGIN StartTask2 */
   /* Infinite loop */
   for(;;){
+	  localCounter2 += 1;
     if(xSemaphoreTake(xSemaphore, (TickType_t)100)) {
+    	GPIOG -> ODR = ((GPIOG -> ODR & (1 << 14)) << 16) | (~GPIOG->ODR & (1 << 14));
+
     	task1State = 0;
     	task2State = 1;
     	task3State = 0;
-    	HAL_GPIO_WritePin(GPIOG, GPIO_PIN_13, GPIO_PIN_RESET);
-    	HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_14); // Toggle GREEN LED
-    	osDelay(1000);
+//    	HAL_GPIO_WritePin(GPIOG, GPIO_PIN_13, GPIO_PIN_RESET);
+//    	HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_14); // Toggle GREEN LED
+//    	osDelay(1000);
     	task2State = -1;
+    	counter += localCounter2;
     	xSemaphoreGive(xSemaphore);
     }
-    osDelay(2001); // Delay to allow other tasks to run
+    osDelay(1); // Delay to allow other tasks to run
   }
   /* USER CODE END StartTask2 */
 }
@@ -320,9 +335,9 @@ void StartTask3(void *argument)
     	task1State = 0;
     	task2State = 0;
     	task3State = 1;
-    	HAL_GPIO_WritePin(GPIOG, GPIO_PIN_13, GPIO_PIN_RESET);
-    	HAL_GPIO_WritePin(GPIOG, GPIO_PIN_14, GPIO_PIN_RESET);
-    	counter++; // Increment counter
+//    	HAL_GPIO_WritePin(GPIOG, GPIO_PIN_13, GPIO_PIN_RESET);
+//    	HAL_GPIO_WritePin(GPIOG, GPIO_PIN_14, GPIO_PIN_RESET);
+//    	counter++; // Increment counter
     	task3State = -1;
     	xSemaphoreGive(xSemaphore);
     }
